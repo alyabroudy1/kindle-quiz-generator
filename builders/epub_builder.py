@@ -73,8 +73,14 @@ class EpubBuilder:
 
         # ── Metadata ────────────────────────────────────────────────
         safe_topic = re.sub(r"[^a-zA-Z0-9]+", "_", self.topic).strip("_")
+        
+        # Truncate topic to avoid OS filename length limits (macOS limits to 255 bytes)
+        # We limit to 100 chars to leave plenty of room for 'Flashcards_' and '.epub'
+        if len(safe_topic) > 100:
+            safe_topic = safe_topic[:100].strip("_")
+            
         book.set_identifier(f"kindle-quiz-{safe_topic}")
-        book.set_title(f"Flashcards: {self.topic}")
+        book.set_title(f"Flashcards: {self.topic[:100]}...")
         book.set_language("en")
         book.add_author("Kindle Quiz Generator")
 
