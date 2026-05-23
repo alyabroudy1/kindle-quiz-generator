@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>Result — Question {{ card.id }}</title>
+    <link rel="stylesheet" type="text/css" href="styles/kindle.css"/>
+</head>
+<body>
+    <p class="card-number">Result — Card {{ card.id }} of {{ total }}</p>
+    <p class="question-text">{{ card.question }}</p>
+
+    <hr class="separator"/>
+
+    {% if selected_index == card.correct_option_index %}
+    <div class="result-correct">
+        ✓ Correct!
+    </div>
+    {% else %}
+    <div class="result-incorrect">
+        ✗ Incorrect
+    </div>
+    <p>You selected: <strong>{{ ["A", "B", "C", "D"][selected_index] }}. {{ card.options[selected_index] }}</strong></p>
+    {% endif %}
+
+    <p>The right answer is: <strong>{{ ["A", "B", "C", "D"][card.correct_option_index] }}. {{ card.options[card.correct_option_index] }}</strong></p>
+
+    <p class="source-hint">Source: {{ card.source_hint }}</p>
+
+    <div class="nav-row">
+        {% if card.id < total %}
+        <a class="btn btn-full" href="q{{ card.id + 1 }}.xhtml">Next Question →</a>
+        {% else %}
+        <a class="btn btn-full" href="index.xhtml">Back to Contents</a>
+        {% endif %}
+    </div>
+</body>
+</html>

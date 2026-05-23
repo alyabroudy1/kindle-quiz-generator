@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>Question {{ card.id }}</title>
+    <link rel="stylesheet" type="text/css" href="styles/kindle.css"/>
+</head>
+<body>
+    {% block content %}
+    <p class="card-number">Card {{ card.id }} of {{ total }}</p>
+    <p class="question-text">{{ card.question }}</p>
+
+    {% for option in card.options %}
+    <a class="option-block" href="mcq_result_{{ card.id }}_{{ loop.index0 }}.xhtml">
+        <span class="option-label">{{ ["A", "B", "C", "D"][loop.index0] }}.</span>
+        {{ option }}
+    </a>
+    {% endfor %}
+
+    <p class="source-hint">Source: {{ card.source_hint }}</p>
+    {% endblock %}
+</body>
+</html>

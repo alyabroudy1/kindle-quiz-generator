@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>Statement {{ card.id }}</title>
+    <link rel="stylesheet" type="text/css" href="styles/kindle.css"/>
+</head>
+<body>
+    {% block content %}
+    <p class="card-number">Card {{ card.id }} of {{ total }}</p>
+
+    <div class="statement-text">
+        "{{ card.statement }}"
+    </div>
+
+    <p><strong>Is this statement True or False?</strong></p>
+
+    <a class="btn btn-full" href="tf_result_{{ card.id }}_true.xhtml">TRUE</a>
+    <a class="btn btn-full" href="tf_result_{{ card.id }}_false.xhtml">FALSE</a>
+
+    <p class="source-hint">Source: {{ card.source_hint }}</p>
+    {% endblock %}
+</body>
+</html>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>Result — Statement {{ card.id }}</title>
+    <link rel="stylesheet" type="text/css" href="styles/kindle.css"/>
+</head>
+<body>
+    <p class="card-number">Result — Card {{ card.id }} of {{ total }}</p>
+
+    <div class="statement-text">
+        "{{ card.statement }}"
+    </div>
+
+    <hr class="separator"/>
+
+    {% if user_answer == card.is_true %}
+    <div class="result-correct">
+        ✓ Correct!
+    </div>
+    {% else %}
+    <div class="result-incorrect">
+        ✗ Incorrect
+    </div>
+    {% endif %}
+
+    <p>The statement is: <strong>{{ "TRUE" if card.is_true else "FALSE" }}</strong></p>
+
+    <div class="explanation-text">
+        <strong>Explanation:</strong> {{ card.explanation }}
+    </div>
+
+    <p class="source-hint">Source: {{ card.source_hint }}</p>
+
+    <div class="nav-row">
+        {% if card.id < total %}
+        <a class="btn btn-full" href="q{{ card.id + 1 }}.xhtml">Next Question →</a>
+        {% else %}
+        <a class="btn btn-full" href="index.xhtml">Back to Contents</a>
+        {% endif %}
+    </div>
+</body>
+</html>

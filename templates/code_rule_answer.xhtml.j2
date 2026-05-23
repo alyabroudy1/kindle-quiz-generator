@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>Answer {{ card.id }}</title>
+    <link rel="stylesheet" type="text/css" href="styles/kindle.css"/>
+    <style>
+        .code-block {
+            font-family: "Courier New", Courier, monospace;
+            background-color: #f4f4f4;
+            border: 1px solid #ccc;
+            padding: 10px;
+            white-space: pre-wrap;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+        }
+        .correct-label {
+            color: #388e3c;
+            font-weight: bold;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+    <p class="card-number">Answer — Card {{ card.id }} of {{ total }}</p>
+
+    <div class="explanation-text" style="margin-bottom: 15px;">
+        <strong>Why it's wrong:</strong> {{ card.incorrect_explanation }}
+    </div>
+
+    <hr class="separator"/>
+
+    <div class="correct-label">Correct ✅</div>
+    <div class="code-block">{{ card.correct_code }}</div>
+
+    <div class="explanation-text" style="margin-bottom: 15px;">
+        <strong>Explanation:</strong> {{ card.correct_explanation }}
+    </div>
+
+    <p class="source-hint">Source: {{ card.source_hint }}</p>
+
+    <div class="nav-row">
+        {% if card.id < total %}
+        <a class="btn btn-full" href="q{{ card.id + 1 }}.xhtml">Next Question →</a>
+        {% else %}
+        <a class="btn btn-full" href="index.xhtml">Back to Contents</a>
+        {% endif %}
+    </div>
+</body>
+</html>

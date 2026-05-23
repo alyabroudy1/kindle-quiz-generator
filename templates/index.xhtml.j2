@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>{{ title }} — Table of Contents</title>
+    <link rel="stylesheet" type="text/css" href="styles/kindle.css"/>
+</head>
+<body>
+    <h1>{{ title }}</h1>
+    <p>{{ num_cards }} flashcards · {{ quiz_type_label }}</p>
+    <hr class="separator"/>
+
+    <h2>Table of Contents</h2>
+    <ul class="toc-list">
+    {% for card in cards %}
+        <li>
+            <a href="q{{ card.id }}.xhtml">Card {{ card.id }}</a>
+        </li>
+    {% endfor %}
+    </ul>
+</body>
+</html>

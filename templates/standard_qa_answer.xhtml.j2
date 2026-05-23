@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>Answer {{ card.id }}</title>
+    <link rel="stylesheet" type="text/css" href="styles/kindle.css"/>
+</head>
+<body>
+    <p class="card-number">Answer — Card {{ card.id }} of {{ total }}</p>
+    <p class="question-text">{{ card.question }}</p>
+
+    <hr class="separator"/>
+
+    <div class="answer-text">
+        <strong>Answer:</strong> {{ card.answer }}
+    </div>
+
+    <p class="source-hint">Source: {{ card.source_hint }}</p>
+
+    <div class="nav-row">
+        {% if card.id < total %}
+        <a class="btn btn-full" href="q{{ card.id + 1 }}.xhtml">Next Question →</a>
+        {% else %}
+        <a class="btn btn-full" href="index.xhtml">Back to Contents</a>
+        {% endif %}
+    </div>
+</body>
+</html>

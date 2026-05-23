@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>Code Rule {{ card.id }}</title>
+    <link rel="stylesheet" type="text/css" href="styles/kindle.css"/>
+    <style>
+        .code-block {
+            font-family: "Courier New", Courier, monospace;
+            background-color: #f4f4f4;
+            border: 1px solid #ccc;
+            padding: 10px;
+            white-space: pre-wrap;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+        }
+        .wrong-label {
+            color: #d32f2f;
+            font-weight: bold;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+    {% block content %}
+    <p class="card-number">Card {{ card.id }} of {{ total }}</p>
+    
+    <div class="statement-text">
+        <strong>Rule:</strong> {{ card.rule_description }}
+    </div>
+
+    <div class="wrong-label">Wrong ❌</div>
+    <div class="code-block">{{ card.incorrect_code }}</div>
+
+    <div class="nav-row">
+        <a class="btn btn-full" href="a{{ card.id }}.xhtml">Show Correct Way</a>
+    </div>
+
+    <p class="source-hint">Source: {{ card.source_hint }}</p>
+    {% endblock %}
+</body>
+</html>
