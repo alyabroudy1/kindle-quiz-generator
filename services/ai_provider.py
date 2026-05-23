@@ -128,7 +128,8 @@ class AIProvider:
         """
         CardModel = self._resolve_card_model(card_model_type)
 
-        batch_size = 10
+        # Code rule cards have complex schemas and generate lots of text, so use a smaller batch
+        batch_size = 5 if card_model_type == "code_rule" else 10
         validated_cards: list[BaseCard] = []
         consecutive_failures = 0
         max_failures = 3
@@ -162,6 +163,7 @@ class AIProvider:
                     response_format={"type": "json_object"},
                     temperature=0.3,
                     max_tokens=4096,
+                    timeout=60.0,
                 )
 
                 raw_content = response.choices[0].message.content
