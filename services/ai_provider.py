@@ -163,7 +163,7 @@ class AIProvider:
                     response_format={"type": "json_object"},
                     temperature=0.3,
                     max_tokens=4096,
-                    timeout=60.0,
+                    timeout=240.0,
                 )
 
                 raw_content = response.choices[0].message.content
