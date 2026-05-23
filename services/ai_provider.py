@@ -255,6 +255,9 @@ class AIProvider:
                 else:
                     consecutive_failures += 1
 
+            except KeyboardInterrupt:
+                print("\n🛑 Generation manually interrupted. Saving cards generated so far...")
+                break
             except json.JSONDecodeError as e:
                 print(f"  ❌ Failed to parse batch AI response as JSON: {e}")
                 consecutive_failures += 1
