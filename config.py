@@ -16,8 +16,7 @@ NVIDIA_BASE_URL: str = "https://integrate.api.nvidia.com/v1"
 AVAILABLE_MODELS: dict[str, str] = {
     "llama-3.1-8b": "meta/llama-3.1-8b-instruct",
     "llama-3.1-70b": "meta/llama-3.1-70b-instruct",
-    "glm-5.1-9b": "ZhipuAI/glm-5.1-9b-instruct",
-    "glm-4-9b": "ZhipuAI/glm-4-9b-chat",
+    "glm-5.1": "z-ai/glm-5.1",
 }
 
 # Recommended default model
