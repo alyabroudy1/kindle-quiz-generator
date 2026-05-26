@@ -128,8 +128,8 @@ class AIProvider:
         """
         CardModel = self._resolve_card_model(card_model_type)
 
-        # Code rule cards have complex schemas and generate lots of text, so use a smaller batch
-        batch_size = 5 if card_model_type == "code_rule" else 10
+        # Complex cards generate lots of text, so use a smaller batch
+        batch_size = 5 if card_model_type in ["code_rule", "concept_example"] else 10
         validated_cards: list[BaseCard] = []
         consecutive_failures = 0
         max_failures = 3
