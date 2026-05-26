@@ -11,8 +11,21 @@ import os
 # ──────────────────────────────────────────────
 NVIDIA_API_KEY: str = os.environ.get("NVIDIA_API_KEY", "YOUR_NVIDIA_API_KEY_HERE")
 NVIDIA_BASE_URL: str = "https://integrate.api.nvidia.com/v1"
+# Curated list of reliable free-tier models (verified working)
+AVAILABLE_MODELS: dict[str, str] = {
+    "llama-3.1-8b (Fast)": "meta/llama-3.1-8b-instruct",
+    "llama-3.1-70b (Medium)": "meta/llama-3.1-70b-instruct",
+    "llama-3.2-3b (Very Fast)": "meta/llama-3.2-3b-instruct",
+    "llama-3.3-70b (Fast)": "meta/llama-3.3-70b-instruct",
+    "glm-5.1 (Medium)": "z-ai/glm-5.1",
+    "mistral-7b (Fast)": "mistralai/mistral-7b-instruct-v0.3",
+    "mixtral-8x7b (Medium)": "mistralai/mixtral-8x7b-instruct-v0.1",
+    "gemma-2-2b (Very Fast)": "google/gemma-2-2b-it",
+    "phi-4-mini (Very Fast)": "microsoft/phi-4-mini-instruct",
+    "solar-10.7b (Fast)": "upstage/solar-10.7b-instruct",
+}
 
-# Recommended default model if user just presses Enter
+# Recommended default model
 DEFAULT_MODEL: str = "meta/llama-3.1-8b-instruct"
 
 # ──────────────────────────────────────────────
