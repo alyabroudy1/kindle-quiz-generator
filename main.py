@@ -84,35 +84,94 @@ def _interactive_menu() -> tuple[str, int, str, str]:
     # Model selection
     print("\n📡 Fetching live models from NVIDIA API...")
     from openai import OpenAI
+    import concurrent.futures
+    import urllib.request
+    import json as _json
+
+    def _probe_model(model_id: str) -> tuple[str, str]:
+        """Send a tiny probe to check if a model is actually alive.
+        Returns (model_id, status) where status is 'alive', 'dead', or 'locked'.
+        """
+        import urllib.error
+        url = f"{NVIDIA_BASE_URL}/chat/completions"
+        payload = _json.dumps({
+            "model": model_id,
+            "messages": [{"role": "user", "content": "hi"}],
+            "max_tokens": 1,
+        }).encode()
+        req = urllib.request.Request(
+            url, data=payload, method="POST",
+            headers={
+                "Authorization": f"Bearer {NVIDIA_API_KEY}",
+                "Content-Type": "application/json",
+            },
+        )
+        try:
+            with urllib.request.urlopen(req, timeout=8) as resp:
+                return (model_id, "alive")
+        except urllib.error.HTTPError as e:
+            if e.code == 404:
+                return (model_id, "locked")
+            return (model_id, "dead")
+        except Exception:
+            return (model_id, "dead")
+
     client = OpenAI(base_url=NVIDIA_BASE_URL, api_key=NVIDIA_API_KEY)
     try:
         models_response = client.models.list()
         
         # Simple heuristic to exclude embedding, reward, and vision models
         exclude_keywords = ["embed", "reward", "vision", "clip", "qa", "guard", "safety", "parse"]
-        live_models = []
+        all_models = []
         for m in models_response.data:
             if not any(kw in m.id.lower() for kw in exclude_keywords):
-                live_models.append(m.id)
+                all_models.append(m.id)
         
-        live_models.sort()
+        # Deduplicate and sort
+        all_models = sorted(set(all_models))
     except Exception as e:
         print(f"❌ Failed to fetch live models: {e}")
         print(f"Falling back to default model: {DEFAULT_MODEL}")
-        live_models = [DEFAULT_MODEL]
+        all_models = [DEFAULT_MODEL]
 
-    print("\n🤖 Select AI Model:")
-    for idx, lm in enumerate(live_models, start=1):
-        is_default = " (Default)" if lm == DEFAULT_MODEL else ""
-        print(f"   {idx}. {lm}{is_default}")
+    # Probe all models in parallel (~8 seconds total)
+    print(f"🏥 Health-checking {len(all_models)} models (this takes ~8 seconds)...")
+    status_map = {}
+    with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:
+        futures = {executor.submit(_probe_model, mid): mid for mid in all_models}
+        for future in concurrent.futures.as_completed(futures):
+            mid, status = future.result()
+            status_map[mid] = status
+
+    alive_models = [m for m in all_models if status_map.get(m) == "alive"]
+    locked_models = [m for m in all_models if status_map.get(m) == "locked"]
+    dead_models = [m for m in all_models if status_map.get(m) == "dead"]
+
+    print(f"\n🤖 Select AI Model ({len(alive_models)} online, {len(locked_models)} need terms, {len(dead_models)} offline):")
+    for idx, lm in enumerate(alive_models, start=1):
+        is_default = " ⭐" if lm == DEFAULT_MODEL else ""
+        print(f"   {idx}. ✅ {lm}{is_default}")
     
-    choice = input(f"\nEnter choice [1-{len(live_models)}, or press Enter for Default]: ").strip()
+    if locked_models:
+        print(f"\n   🔒 Need terms acceptance at build.nvidia.com:")
+        for lm in locked_models:
+            print(f"      - {lm}")
+    if dead_models:
+        print(f"\n   💀 Currently offline/unresponsive:")
+        for lm in dead_models:
+            print(f"      - {lm}")
+    
+    if not alive_models:
+        print("❌ No models are currently online.")
+        sys.exit(1)
+
+    choice = input(f"\nEnter choice [1-{len(alive_models)}, or press Enter for Default]: ").strip()
     if choice:
         try:
             choice_idx = int(choice) - 1
-            if choice_idx < 0 or choice_idx >= len(live_models):
+            if choice_idx < 0 or choice_idx >= len(alive_models):
                 raise ValueError
-            model_name = live_models[choice_idx]
+            model_name = alive_models[choice_idx]
         except (ValueError, IndexError):
             print("❌ Invalid choice.")
             sys.exit(1)
