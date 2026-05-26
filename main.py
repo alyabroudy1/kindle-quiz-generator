@@ -134,7 +134,7 @@ def _parse_args() -> argparse.Namespace:
         type=str,
         default=None,
         choices=list(QUIZ_TYPE_REGISTRY.keys()),
-        help="Quiz format: standard_qa, multiple_choice, true_false, or code_rule.",
+        help="Quiz format: standard_qa, multiple_choice, true_false, code_rule, or concept_example.",
     )
     parser.add_argument(
         "-m", "--model",

@@ -22,6 +22,7 @@ from models.standard_qa import StandardQACard
 from models.multiple_choice import MultipleChoiceCard
 from models.true_false import TrueFalseCard
 from models.code_rule import CodeRuleCard
+from models.concept_example import ConceptExampleCard
 
 
 # ── Template directory (sibling to this file's package) ─────────
@@ -166,6 +167,8 @@ class EpubBuilder:
             return self._render_true_false(card, total, style)
         elif isinstance(card, CodeRuleCard):
             return self._render_code_rule(card, total, style)
+        elif isinstance(card, ConceptExampleCard):
+            return self._render_concept_example(card, total, style)
         else:
             raise TypeError(f"Unknown card type: {type(card).__name__}")
 
@@ -294,6 +297,39 @@ class EpubBuilder:
         a_html = a_template.render(**ctx)
         a_page = epub.EpubHtml(
             title=f"Rule Answer {card.id}",
+            file_name=f"a{card.id}.xhtml",
+            lang="en",
+            content=a_html.encode("utf-8"),
+        )
+        a_page.add_item(style)
+        pages.append(a_page)
+
+        return pages
+
+    def _render_concept_example(
+        self, card: ConceptExampleCard, total: int, style: epub.EpubItem
+    ) -> list[epub.EpubHtml]:
+        """Render question page + answer page for a Concept & Example card."""
+        pages: list[epub.EpubHtml] = []
+        ctx = {"card": card, "total": total}
+
+        # Question page
+        q_template = self.env.get_template("concept_example.xhtml.j2")
+        q_html = q_template.render(**ctx)
+        q_page = epub.EpubHtml(
+            title=f"Concept {card.id}",
+            file_name=f"q{card.id}.xhtml",
+            lang="en",
+            content=q_html.encode("utf-8"),
+        )
+        q_page.add_item(style)
+        pages.append(q_page)
+
+        # Answer page
+        a_template = self.env.get_template("concept_example_answer.xhtml.j2")
+        a_html = a_template.render(**ctx)
+        a_page = epub.EpubHtml(
+            title=f"Concept Answer {card.id}",
             file_name=f"a{card.id}.xhtml",
             lang="en",
             content=a_html.encode("utf-8"),

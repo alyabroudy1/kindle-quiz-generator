@@ -9,6 +9,7 @@ A professional Python CLI tool that uses AI (NVIDIA Build API with LLaMA 3.1, GL
   - **Multiple Choice (MCQ)**: Questions with 4 options and dedicated result pages.
   - **True/False**: Statement-based questions with True/False evaluations.
   - **Code Rule**: Displays a coding rule, an incorrect code block to evaluate, and the correct code block with explanations.
+  - **Concept & Example**: Deep dive into concepts, displaying a definition on the front, and a detailed explanation with real-life examples or code snippets on the back.
 - **Batched Generation**: Safely generates large numbers of cards (e.g., 75+) by chunking requests and passing previous context to prevent duplicates.
 - **Strict Validation**: Uses Pydantic to ensure all cards have the correct schema, discarding low-confidence or hallucinated results.
 - **Auto AZW3 Conversion**: Automatically converts generated `.epub` files into Kindle-native `.azw3` format if Calibre is installed.

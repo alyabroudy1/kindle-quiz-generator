@@ -63,4 +63,10 @@ QUIZ_TYPE_REGISTRY: dict[str, dict[str, str]] = {
         "template": "code_rule.xhtml.j2",
         "label": "Code Rule / Comparison",
     },
+    "concept_example": {
+        "model_module": "models.concept_example",
+        "model_class": "ConceptExampleCard",
+        "template": "concept_example.xhtml.j2",
+        "label": "Concept & Example",
+    },
 }

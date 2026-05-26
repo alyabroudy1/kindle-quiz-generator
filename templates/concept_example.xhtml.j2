@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>Concept {{ card.id }}</title>
+    <link rel="stylesheet" type="text/css" href="styles/kindle.css"/>
+</head>
+<body>
+    {% block content %}
+    <p class="card-number">Card {{ card.id }} of {{ total }}</p>
+    
+    <h2 style="text-align: center; margin-bottom: 20px;">{{ card.concept_name }}</h2>
+    
+    <div class="statement-text">
+        <strong>Definition:</strong><br/>
+        {{ card.concept_description }}
+    </div>
+
+    <div class="nav-row">
+        <a class="btn btn-full" href="a{{ card.id }}.xhtml">Show Explanation &amp; Example</a>
+    </div>
+
+    <p class="source-hint">Source: {{ card.source_hint }}</p>
+    {% endblock %}
+</body>
+</html>
