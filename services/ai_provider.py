@@ -174,6 +174,8 @@ class AIProvider:
                 sys.stdout.write("  ⏳ Receiving: ")
                 sys.stdout.flush()
                 for chunk in stream:
+                    if not chunk.choices:
+                        continue
                     delta = chunk.choices[0].delta.content
                     if delta:
                         raw_content += delta
