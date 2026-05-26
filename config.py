@@ -12,11 +12,13 @@ import os
 NVIDIA_API_KEY: str = os.environ.get("NVIDIA_API_KEY", "YOUR_NVIDIA_API_KEY_HERE")
 NVIDIA_BASE_URL: str = "https://integrate.api.nvidia.com/v1"
 
-# Available Free NVIDIA Models
+# Available Free NVIDIA Models (ordered fastest → slowest)
 AVAILABLE_MODELS: dict[str, str] = {
-    "llama-3.1-8b": "meta/llama-3.1-8b-instruct",
-    "llama-3.1-70b": "meta/llama-3.1-70b-instruct",
-    "glm-5.1": "z-ai/glm-5.1",
+    "llama-3.1-8b (Fast)": "meta/llama-3.1-8b-instruct",
+    "llama-3.1-70b (Medium)": "meta/llama-3.1-70b-instruct",
+    "nemotron-70b (Medium)": "nvidia/llama-3.1-nemotron-70b-instruct",
+    "mistral-nemo-12b (Fast)": "nv-mistralai/mistral-nemo-12b-instruct",
+    "glm-5.1 (Slow — 754B)": "z-ai/glm-5.1",
 }
 
 # Recommended default model

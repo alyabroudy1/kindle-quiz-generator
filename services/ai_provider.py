@@ -154,7 +154,8 @@ class AIProvider:
             )
 
             try:
-                response = self.client.chat.completions.create(
+                # Use streaming to avoid timeouts and show live progress
+                stream = self.client.chat.completions.create(
                     model=model_name,
                     messages=[
                         {"role": "system", "content": self._get_system_prompt()},
@@ -163,11 +164,27 @@ class AIProvider:
                     response_format={"type": "json_object"},
                     temperature=0.3,
                     max_tokens=4096,
-                    timeout=240.0,
+                    stream=True,
                 )
 
-                raw_content = response.choices[0].message.content
-                if raw_content is None:
+                # Collect streamed chunks with a live progress indicator
+                raw_content = ""
+                char_count = 0
+                import sys
+                sys.stdout.write("  ⏳ Receiving: ")
+                sys.stdout.flush()
+                for chunk in stream:
+                    delta = chunk.choices[0].delta.content
+                    if delta:
+                        raw_content += delta
+                        char_count += len(delta)
+                        # Update progress every ~200 chars
+                        sys.stdout.write(f"\r  ⏳ Receiving: {char_count:,} chars")
+                        sys.stdout.flush()
+                sys.stdout.write(f"\r  📥 Received: {char_count:,} chars total     \n")
+                sys.stdout.flush()
+
+                if not raw_content.strip():
                     print("  ⚠️ AI returned an empty response. Retrying...")
                     consecutive_failures += 1
                     continue
@@ -273,3 +290,4 @@ class AIProvider:
             f"\n🎉 Generation complete! Total accepted: {len(validated_cards)}/{num_cards}"
         )
         return validated_cards
+
