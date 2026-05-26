@@ -165,6 +165,7 @@ class AIProvider:
                     temperature=0.3,
                     max_tokens=4096,
                     stream=True,
+                    timeout=120.0, # Prevent infinite hangs if a specific model backend is dead
                 )
 
                 # Collect streamed chunks with a live progress indicator
