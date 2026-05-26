@@ -161,7 +161,6 @@ class AIProvider:
                         {"role": "system", "content": self._get_system_prompt()},
                         {"role": "user", "content": user_prompt},
                     ],
-                    response_format={"type": "json_object"},
                     temperature=0.3,
                     max_tokens=4096,
                     stream=True,
@@ -192,7 +191,25 @@ class AIProvider:
                     consecutive_failures += 1
                     continue
 
-                parsed_data = json.loads(raw_content)
+                # Strip markdown code blocks in case the model wraps the JSON
+                cleaned_content = raw_content.strip()
+                if cleaned_content.startswith("```"):
+                    # Find the first { or [ after the first ```
+                    start_idx = cleaned_content.find("{")
+                    start_idx2 = cleaned_content.find("[")
+                    if start_idx != -1 and start_idx2 != -1:
+                        start_idx = min(start_idx, start_idx2)
+                    elif start_idx2 != -1:
+                        start_idx = start_idx2
+                    
+                    if start_idx != -1:
+                        cleaned_content = cleaned_content[start_idx:]
+                    
+                    # Remove trailing ```
+                    if cleaned_content.endswith("```"):
+                        cleaned_content = cleaned_content[:-3].strip()
+
+                parsed_data = json.loads(cleaned_content)
 
                 # Handle the AI wrapping arrays in objects (e.g. {"cards": [...]})
                 if isinstance(parsed_data, dict):
