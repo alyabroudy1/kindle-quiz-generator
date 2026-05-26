@@ -87,15 +87,41 @@ def _interactive_menu() -> tuple[str, int, str, str]:
     for i, key in enumerate(model_keys, start=1):
         is_default = " (Default)" if AVAILABLE_MODELS[key] == DEFAULT_MODEL else ""
         print(f"   {i}. {key}{is_default}")
+    print(f"   {len(model_keys) + 1}. 🌐 Fetch ALL live models from NVIDIA API")
     
-    choice = input(f"\nEnter choice [1-{len(model_keys)}, or press Enter for Default]: ").strip()
+    choice = input(f"\nEnter choice [1-{len(model_keys) + 1}, or press Enter for Default]: ").strip()
     if choice:
         try:
             choice_idx = int(choice) - 1
-            if choice_idx < 0 or choice_idx >= len(model_keys):
+            if choice_idx == len(model_keys):
+                # Fetch dynamically
+                print("\n📡 Fetching live models from NVIDIA API...")
+                from openai import OpenAI
+                client = OpenAI(base_url=NVIDIA_BASE_URL, api_key=NVIDIA_API_KEY)
+                models_response = client.models.list()
+                
+                # Simple heuristic to exclude embedding, reward, and vision models
+                exclude_keywords = ["embed", "reward", "vision", "clip", "qa", "guard", "safety", "parse"]
+                live_models = []
+                for m in models_response.data:
+                    if not any(kw in m.id.lower() for kw in exclude_keywords):
+                        live_models.append(m.id)
+                
+                live_models.sort()
+                print("\n🌐 Live Chat/Instruct Models:")
+                for idx, lm in enumerate(live_models, start=1):
+                    print(f"   {idx}. {lm}")
+                
+                live_choice = input(f"\nEnter choice [1-{len(live_models)}]: ").strip()
+                live_idx = int(live_choice) - 1
+                if live_idx < 0 or live_idx >= len(live_models):
+                    raise ValueError
+                model_name = live_models[live_idx]
+            elif choice_idx < 0 or choice_idx > len(model_keys):
                 raise ValueError
-            model_key = model_keys[choice_idx]
-            model_name = AVAILABLE_MODELS[model_key]
+            else:
+                model_key = model_keys[choice_idx]
+                model_name = AVAILABLE_MODELS[model_key]
         except (ValueError, IndexError):
             print("❌ Invalid choice.")
             sys.exit(1)
